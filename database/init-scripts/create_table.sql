@@ -1,0 +1,4 @@
+CREATE TABLE "Books" (
+    "Id" INT PRIMARY KEY,
+    "Title" VARCHAR(255) NOT NULL
+);

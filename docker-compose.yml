@@ -1,1 +1,46 @@
-# TODO
+version: '3.8'
+
+services:
+  frontend:
+    image: karimnahas01/frontend-image:latest
+    ports:
+      - "1234:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+
+  backend:
+    image: karimnahas01/backend-image:latest
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Username=postgres;Password=postgres;Database=BooksDB
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: BooksDB
+    volumes:
+      - ./database/init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+volumes:
+  db-data:
+  
+networks:
+  app-network:
+    driver: bridge
